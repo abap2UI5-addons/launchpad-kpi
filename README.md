@@ -14,7 +14,7 @@
 * [abap2UI5](https://github.com/abap2UI5/abap2UI5)
 
 #### Limitations & Todo
-* Implement and CDS/SADL bases OData Service for `ABAP for Cloud` compatibility
+* Implement a CDS/SADL based OData Service for `ABAP for Cloud` compatibility
 
 #### Demo
 ###### Idea
@@ -25,7 +25,7 @@
 
 
 #### Usage
-1. The launchpad-kpi addons can be accesd via a single interface and method:
+1. The launchpad-kpi addons can be accessed via a single interface and method:
 ```abap
 INTERFACE z2ui5_if_lp_kpi
   PUBLIC.
