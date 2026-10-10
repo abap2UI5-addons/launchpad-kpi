@@ -33,8 +33,16 @@ CLASS zcl_z2ui5_proxy_kpi_dpc_ext IMPLEMENTATION.
       CATCH cx_root.
     ENDTRY.
 
+    " a class that does not exist or does not implement z2ui5_if_lp_kpi is
+    " answered like a missing CLASS condition, not with a short dump
     DATA li_proxy_kpi TYPE REF TO z2ui5_if_lp_kpi.
-    CREATE OBJECT li_proxy_kpi TYPE (lv_classname).
+    TRY.
+        CREATE OBJECT li_proxy_kpi TYPE (lv_classname).
+      CATCH cx_sy_create_object_error cx_sy_move_cast_error.
+        INSERT VALUE #( id = `ERROR_NO_KPI_CLASS_FOUND_WITH_THIS_NAME` ) INTO TABLE lt_result.
+        copy_data_to_ref( EXPORTING is_data = lt_result CHANGING cr_data = er_entityset ).
+        RETURN.
+    ENDTRY.
     DATA(lv_count) = li_proxy_kpi->count( lv_filter ).
 
     DO lv_count TIMES.
