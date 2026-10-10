@@ -28,8 +28,10 @@ CLASS zcl_z2ui5_proxy_kpi_dpc_ext IMPLEMENTATION.
         RETURN.
     ENDTRY.
 
+    " FILTER goes to count( ) as the caller wrote it - a JSON string whose
+    " values the KPI class compares; only the class name is upper-cased
     TRY.
-        DATA(lv_filter) = to_upper( lt_filter_cond[ property = `FILTER` ]-select_options[ 1 ]-low ).
+        DATA(lv_filter) = CONV string( lt_filter_cond[ property = `FILTER` ]-select_options[ 1 ]-low ).
       CATCH cx_root.
     ENDTRY.
 
