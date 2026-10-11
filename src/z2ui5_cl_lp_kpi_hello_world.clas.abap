@@ -45,7 +45,7 @@ CLASS z2ui5_cl_lp_kpi_hello_world IMPLEMENTATION.
             result = 20.
         ENDCASE.
 
-      CATCH cx_root.
+      CATCH cx_root ##NO_HANDLER.
     ENDTRY.
 
   ENDMETHOD.
