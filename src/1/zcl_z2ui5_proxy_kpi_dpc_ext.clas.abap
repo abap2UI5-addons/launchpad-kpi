@@ -30,7 +30,7 @@ CLASS zcl_z2ui5_proxy_kpi_dpc_ext IMPLEMENTATION.
 
     TRY.
         DATA(lv_filter) = to_upper( lt_filter_cond[ property = `FILTER` ]-select_options[ 1 ]-low ).
-      CATCH cx_root.
+      CATCH cx_root ##NO_HANDLER.
     ENDTRY.
 
     " a class that does not exist or does not implement z2ui5_if_lp_kpi is
