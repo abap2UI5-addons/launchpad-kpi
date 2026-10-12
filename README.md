@@ -4,6 +4,8 @@
 [![ABAP](https://img.shields.io/badge/ABAP-Standard%20%E2%89%A5%207.50-blue)](#installation)
 [![abap2UI5](https://img.shields.io/badge/requires-abap2UI5-blue)](https://github.com/abap2UI5/abap2UI5)
 [![License](https://img.shields.io/github/license/abap2UI5-addons/launchpad-kpi)](LICENSE)
+<br>
+[![ABAP Standard](https://img.shields.io/github/actions/workflow/status/abap2UI5-addons/launchpad-kpi/abap-standard.yaml?branch=standard&label=ABAP%20Standard)](https://github.com/abap2UI5-addons/launchpad-kpi/actions/workflows/abap-standard.yaml)
 
 **Send KPIs of your abap2UI5 apps to the SAP Fiori Launchpad.** Implement a
 single interface with a single method that returns the KPI value, and the
@@ -104,6 +106,15 @@ The sample `z2ui5_cl_lp_kpi_hello_world` also shows how to pass a second
 ## Limitations & Todo
 
 * Implement a CDS/SADL based OData Service for `ABAP for Cloud` compatibility
+
+## Development
+
+```sh
+npm ci
+npm run check
+```
+
+`npm run check` runs abaplint the way CI does (`abap-standard.yaml`).
 
 ## Contributing
 
