@@ -33,8 +33,26 @@ CLASS zcl_z2ui5_proxy_kpi_dpc_ext IMPLEMENTATION.
       CATCH cx_root ##NO_HANDLER.
     ENDTRY.
 
-    " a class that does not exist or does not implement z2ui5_if_lp_kpi is
-    " answered like a missing CLASS condition, not with a short dump
+    " The class name comes from the request, so only a class that implements
+    " z2ui5_if_lp_kpi is ever created. That is checked here, before CREATE
+    " OBJECT: the typed reference below would refuse any other class too, but
+    " only once the runtime got that far - this way no other class is ever
+    " instantiated. A class that does not exist or does not implement the
+    " interface is answered like a missing CLASS condition, not with a dump.
+    DATA(lo_kpi_intf) = CAST cl_abap_intfdescr( cl_abap_typedescr=>describe_by_name( `Z2UI5_IF_LP_KPI` ) ).
+    DATA lo_type TYPE REF TO cl_abap_typedescr.
+    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_classname
+                                         RECEIVING  p_descr_ref    = lo_type
+                                         EXCEPTIONS type_not_found = 1
+                                                    OTHERS         = 2 ).
+    IF    sy-subrc <> 0
+       OR lo_type->kind <> cl_abap_typedescr=>kind_class
+       OR lo_kpi_intf->applies_to_class( lv_classname ) = abap_false.
+      INSERT VALUE #( id = `ERROR_NO_KPI_CLASS_FOUND_WITH_THIS_NAME` ) INTO TABLE lt_result.
+      copy_data_to_ref( EXPORTING is_data = lt_result CHANGING cr_data = er_entityset ).
+      RETURN.
+    ENDIF.
+
     DATA li_proxy_kpi TYPE REF TO z2ui5_if_lp_kpi.
     TRY.
         CREATE OBJECT li_proxy_kpi TYPE (lv_classname).
