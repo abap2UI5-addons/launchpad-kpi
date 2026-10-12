@@ -1,0 +1,26 @@
+{
+  "name": "abap2ui5-launchpad-kpi",
+  "private": true,
+  "version": "1.0.0",
+  "description": "abap2UI5 Launchpad KPI - send KPIs of abap2UI5 apps to the SAP Fiori Launchpad",
+  "scripts": {
+    "lint": "abaplint ./abaplint.jsonc",
+    "check": "npm run lint",
+    "test": "npm run check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abap2UI5-addons/launchpad-kpi.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abap2UI5-addons/launchpad-kpi/issues"
+  },
+  "homepage": "https://github.com/abap2UI5-addons/launchpad-kpi#readme",
+  "devDependencies": {
+    "@abaplint/cli": "^2.120.75"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
