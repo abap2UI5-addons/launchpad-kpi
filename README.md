@@ -32,6 +32,8 @@ count, so every app only has to implement one method.
   `standard` on every push - pull abap2UI5 from its `702` branch as well
 - [abap2UI5](https://github.com/abap2UI5/abap2UI5)
 
+**Renamed (2026-11).** The generated OData classes follow the abap2UI5 naming now: `ZCL_Z2UI5_PROXY_KPI_MPC(_EXT)` and `_DPC(_EXT)` are `Z2UI5_CL_LP_KPI_MPC(_EXT)` and `Z2UI5_CL_LP_KPI_DPC(_EXT)`; the model and the service point to the new classes. After the pull abapGit lists the old classes as deleted in the repository - delete them.
+
 **Steps** - with [abapGit](https://abapgit.org), in this order:
 
 1. [abap2UI5](https://github.com/abap2UI5/abap2UI5)
