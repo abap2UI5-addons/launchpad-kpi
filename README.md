@@ -28,6 +28,8 @@ count, so every app only has to implement one method.
 
 - S/4 Private Cloud or On-Premise, or R/3 NetWeaver AS ABAP 7.50 or higher
   (Standard ABAP)
+- NetWeaver 7.02 - 7.40: the branch `702`, downported automatically from
+  `standard` on every push - pull abap2UI5 from their `702` branches as well
 - [abap2UI5](https://github.com/abap2UI5/abap2UI5)
 
 **Steps** - with [abapGit](https://abapgit.org), in this order:
