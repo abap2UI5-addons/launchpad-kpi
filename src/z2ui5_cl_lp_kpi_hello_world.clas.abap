@@ -34,7 +34,7 @@ CLASS z2ui5_cl_lp_kpi_hello_world IMPLEMENTATION.
         ).
 
         ASSIGN ('LR_VAL->PROP1->*') TO FIELD-SYMBOL(<prop1>).
-        IF sy-subrc <> 0.
+        IF <prop1> IS NOT ASSIGNED.
           RETURN.
         ENDIF.
 

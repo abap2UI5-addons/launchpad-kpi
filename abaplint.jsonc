@@ -355,6 +355,8 @@
     "range_row_values": true,
     "redundant_cast": true,
     "smim_consistency": true,
-    "sort_empty_key": true
+    "sort_empty_key": true,
+    // added 2026-11 with its finding fixed
+    "subrc_after_assign": true
   }
 }
