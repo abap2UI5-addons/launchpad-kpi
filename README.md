@@ -13,7 +13,7 @@ OData service `Z2UI5_PROXY_KPI_SRV` of this repository hands it to a launchpad
 tile. For developers who want their abap2UI5 apps to show a live number on
 the launchpad.
 
-> Part of [abap2UI5-addons](https://github.com/abap2UI5-addons) - addons and apps for [abap2UI5](https://github.com/abap2UI5/abap2UI5), installed with [abapGit](https://abapgit.org).
+> Part of [abap2UI5-addons](https://github.com/abap2UI5-addons) - addons and apps for [abap2UI5](https://github.com/abap2UI5/abap2UI5), installed with [abapGit](https://abapgit.org). Documentation: [abap2ui5-addons.github.io/launchpad-kpi](https://abap2ui5-addons.github.io/launchpad-kpi/).
 
 ## Why
 
@@ -65,7 +65,7 @@ INTERFACE z2ui5_if_lp_kpi
 
 ENDINTERFACE.
 ```
-2. Include it into your app to return KPIs as shown here:
+2. Implement it in your app to return the KPI, as shown here:
 ```abap
 CLASS zcl_my_app DEFINITION
   PUBLIC
@@ -92,7 +92,7 @@ CLASS zcl_my_app IMPLEMENTATION.
 ENDCLASS.
 ```
 
-3. Maintain the KPI at the Launchpad with the following endpoint:
+3. Maintain the KPI tile in the launchpad with the following endpoint:
 `.../sap/opu/odata/sap/Z2UI5_PROXY_KPI_SRV/ENTITYCollection/$count?$filter=CLASS eq 'zcl_my_app'`
 
 The sample `z2ui5_cl_lp_kpi_hello_world` also shows how to pass a second
@@ -101,9 +101,9 @@ The sample `z2ui5_cl_lp_kpi_hello_world` also shows how to pass a second
 
 ## Features
 
-* KPI Connector: Send KPIs of your abap2UI5 Apps to SAP Fiori Launchpad
+* KPI Connector: Send KPIs of your abap2UI5 apps to the SAP Fiori Launchpad
 * User-Friendly: Implement just a single interface and method to return the KPI value
-* Project Consistency: Easily integrable with your abap2UI5 apps
+* Project Consistency: Easy to integrate with your abap2UI5 apps
 
 ## Demo
 
@@ -128,7 +128,7 @@ npm run check
 
 ## Contributing
 
-Issues and pull requests are welcome! Whether you're fixing bugs, adding new functionality, or improving documentation, your contributions are highly appreciated.
+Issues and pull requests are welcome - see [CONTRIBUTING.md](CONTRIBUTING.md) for what CI checks. Whether you're fixing bugs, adding new functionality, or improving documentation, your contributions are highly appreciated.
 
 ## License
 

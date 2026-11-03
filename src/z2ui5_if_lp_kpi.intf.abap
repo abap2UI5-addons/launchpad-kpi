@@ -3,7 +3,7 @@ INTERFACE z2ui5_if_lp_kpi
 
   METHODS count
     IMPORTING
-      filter           TYPE string
+      filter        TYPE string
     RETURNING
       VALUE(result) TYPE i.
 

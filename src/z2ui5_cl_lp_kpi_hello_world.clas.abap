@@ -30,7 +30,7 @@ CLASS z2ui5_cl_lp_kpi_hello_world IMPLEMENTATION.
           EXPORTING
             json             = filter                 " JSON string
           CHANGING
-            data             = lr_val                 " Data to serialize
+            data             = lr_val                 " deserialized data
         ).
 
         ASSIGN ('LR_VAL->PROP1->*') TO FIELD-SYMBOL(<prop1>).
