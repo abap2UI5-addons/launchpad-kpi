@@ -32,6 +32,7 @@ A connector that lets an abap2UI5 app show a live number on a SAP Fiori Launchpa
 ## Requirements
 
 - S/4 Private Cloud or On-Premise, or R/3 NetWeaver AS ABAP 7.50 or higher (Standard ABAP)
+- NetWeaver 7.02 - 7.40: the downported branch 702
 - abap2UI5
 - ABAP for Cloud: not yet, a CDS/SADL based OData service is on the todo list
 
