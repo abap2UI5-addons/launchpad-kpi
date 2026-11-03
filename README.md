@@ -28,7 +28,11 @@ count, so every app only has to implement one method.
 
 - S/4 Private Cloud or On-Premise, or R/3 NetWeaver AS ABAP 7.50 or higher
   (Standard ABAP)
+- NetWeaver 7.02 - 7.40: the branch `702`, downported automatically from
+  `standard` on every push - pull abap2UI5 from its `702` branch as well
 - [abap2UI5](https://github.com/abap2UI5/abap2UI5)
+
+**Renamed (2026-11).** The generated OData classes follow the abap2UI5 naming now: `ZCL_Z2UI5_PROXY_KPI_MPC(_EXT)` and `_DPC(_EXT)` are `Z2UI5_CL_LP_KPI_MPC(_EXT)` and `Z2UI5_CL_LP_KPI_DPC(_EXT)`; the model and the service point to the new classes. After the pull abapGit lists the old classes as deleted in the repository - delete them.
 
 **Steps** - with [abapGit](https://abapgit.org), in this order:
 
@@ -36,6 +40,12 @@ count, so every app only has to implement one method.
 2. this repository (branch `standard`) - the interface `Z2UI5_IF_LP_KPI`, the
    sample `Z2UI5_CL_LP_KPI_HELLO_WORLD` and the OData service
    `Z2UI5_PROXY_KPI_SRV`
+3. Activate the service in `/IWFND/MAINT_SERVICE` (system alias `LOCAL`) if
+   its ICF node is not active yet. The repository carries no ICF node for it:
+   the service name has 19 characters and an ICF node at most 15, so the
+   system creates the node under `/sap/opu/odata/sap/` with a short name of
+   its own (system ID plus a counter) - a name that differs from system to
+   system.
 
 **Start** - call the count of the sample class:
 `.../sap/opu/odata/sap/Z2UI5_PROXY_KPI_SRV/ENTITYCollection/$count?$filter=CLASS eq 'z2ui5_cl_lp_kpi_hello_world'`

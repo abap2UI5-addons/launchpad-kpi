@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_Z2UI5_PROXY_KPI_DPC</CLSNAME>
+    <CLSNAME>Z2UI5_CL_LP_KPI_DPC</CLSNAME>
     <LANGU>E</LANGU>
     <DESCRIPT>Data Provider Base Class</DESCRIPT>
     <STATE>1</STATE>

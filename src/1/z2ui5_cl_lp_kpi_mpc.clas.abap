@@ -1,4 +1,4 @@
-class ZCL_Z2UI5_PROXY_KPI_MPC definition
+class Z2UI5_CL_LP_KPI_MPC definition
   public
   inheriting from /IWBEP/CL_MGW_PUSH_ABS_MODEL
   create public .
@@ -47,7 +47,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_Z2UI5_PROXY_KPI_MPC IMPLEMENTATION.
+CLASS Z2UI5_CL_LP_KPI_MPC IMPLEMENTATION.
 
 
   method DEFINE.
@@ -127,7 +127,7 @@ lo_property->/iwbep/if_mgw_odata_annotatabl~create_annotation( 'sap' )->add(
         iv_key      = 'unicode'
         iv_value    = 'false' ).
 
-lo_entity_type->bind_structure( iv_structure_name  = 'ZCL_Z2UI5_PROXY_KPI_MPC=>TS_ENTITY' ). "#EC NOTEXT
+lo_entity_type->bind_structure( iv_structure_name  = 'Z2UI5_CL_LP_KPI_MPC=>TS_ENTITY' ). "#EC NOTEXT
   endmethod.
 
 

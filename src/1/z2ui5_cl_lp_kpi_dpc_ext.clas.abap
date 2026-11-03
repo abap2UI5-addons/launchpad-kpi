@@ -1,6 +1,6 @@
-CLASS zcl_z2ui5_proxy_kpi_dpc_ext DEFINITION
+CLASS z2ui5_cl_lp_kpi_dpc_ext DEFINITION
   PUBLIC
-  INHERITING FROM zcl_z2ui5_proxy_kpi_dpc
+  INHERITING FROM z2ui5_cl_lp_kpi_dpc
   CREATE PUBLIC .
 
   PUBLIC SECTION.
@@ -13,11 +13,11 @@ ENDCLASS.
 
 
 
-CLASS zcl_z2ui5_proxy_kpi_dpc_ext IMPLEMENTATION.
+CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
 
   METHOD /iwbep/if_mgw_appl_srv_runtime~get_entityset.
 
-    DATA lt_result TYPE zcl_z2ui5_proxy_kpi_mpc=>tt_entity.
+    DATA lt_result TYPE z2ui5_cl_lp_kpi_mpc=>tt_entity.
     DATA(lt_filter_cond) = io_tech_request_context->get_filter( )->get_filter_select_options( ).
 
     TRY.
