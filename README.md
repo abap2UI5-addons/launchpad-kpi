@@ -13,7 +13,7 @@ OData service `Z2UI5_PROXY_KPI_SRV` of this repository hands it to a launchpad
 tile. For developers who want their abap2UI5 apps to show a live number on
 the launchpad.
 
-> Part of [abap2UI5-addons](https://github.com/abap2UI5-addons) - addons and apps for [abap2UI5](https://github.com/abap2UI5/abap2UI5), installed with [abapGit](https://abapgit.org).
+> Part of [abap2UI5-addons](https://github.com/abap2UI5-addons) - addons and apps for [abap2UI5](https://github.com/abap2UI5/abap2UI5), installed with [abapGit](https://abapgit.org). Documentation: [abap2ui5-addons.github.io/launchpad-kpi](https://abap2ui5-addons.github.io/launchpad-kpi/).
 
 ## Why
 
