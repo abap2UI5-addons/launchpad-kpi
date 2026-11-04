@@ -5,8 +5,8 @@ hero:
   name: "Launchpad KPI"
   text: "Show KPIs of your apps on Fiori Launchpad tiles."
   image:
-    src: /favicon.png
-    alt: abap2UI5
+    src: /logo.svg
+    alt: abap2UI5 addons
   actions:
     - theme: brand
       text: Get started
