@@ -16,7 +16,7 @@ and this file in step.
 | `site/` | The documentation site (VitePress) - https://abap2ui5-addons.github.io/launchpad-kpi/ |
 
 The default branch is **`standard`**, not `main`; `702` is downported from it
-on every push (`publish-702.yaml`).
+on every push (`ci-702.yaml`).
 
 ## Rules
 
@@ -28,7 +28,9 @@ on every push (`publish-702.yaml`).
   `/sap/opu/odata/sap/` with a name of its own when the service is activated
   in `/IWFND/MAINT_SERVICE`.
 - **Standard ABAP only.** Gateway (`/IWBEP/`) does not exist on ABAP Cloud;
-  there is no cloud lint here, and the transpiler cannot build the SEGW
+  there is no cloud lint here (abaplint for Cloud reports 12 issues, every
+  one of them the missing `/IWBEP/` super classes and interfaces), and the
+  transpiler cannot build the SEGW
   classes (their super classes are void) - abap2UI5's backlog
   `transpiler-void-superclass`.
 - **No namespace rename.** abaplint cannot rename the Gateway objects
@@ -38,9 +40,35 @@ on every push (`publish-702.yaml`).
 
 ```sh
 npm ci
-npm run check   # abaplint, what CI runs
+npm run check   # abaplint and the abap2UI5-linter, what CI runs
 npm run site    # the documentation site into build/site
 ```
+
+## CI
+
+CI comes from the shared CI template of abap2UI5-addons (reusable workflows in
+[rap-ext](https://github.com/abap2UI5-addons/rap-ext/blob/main/.github/ci/README.md),
+pinned by commit in the `uses:` lines and moved by `bump-deps`), triggered
+from `standard`:
+
+* `ci` - on every push to `standard`, every pull request, weekly and by
+  hand: `check / abaplint (./abaplint.jsonc)` and `check / abap2ui5lint`
+  (`abap2ui5lint.jsonc`: every class, no render gate - there is no view; it
+  checks what is used from abap2UI5). These are the required status checks
+  of the branch protection. The linter's baseline holds one finding in the
+  generated `z2ui5_cl_lp_kpi_mpc` (`default-key-table`), which is never
+  edited by hand.
+* `ci-702` - on every push to `standard` `npm run auto_downport`, a
+  force-push to the branch `702`, then abaplint on that branch
+  (`.github/abaplint/abap_702.jsonc`). Never commit to `702` by hand.
+* `bump-deps` (monthly; the template pin moves only with the `DEPS_TOKEN`
+  secret).
+* `deploy-pages` - **not** from the template: `addon-pages.yaml` of
+  ci-v1.0.0 deploys only from `refs/heads/main`, and the default branch here
+  is `standard`.
+
+No ABAP Cloud lint (Gateway, above), no unit tests, no rename, no
+`.github/deps.json`.
 
 English for code, comments, commit messages and pull requests. The wider
 rules live in abap2UI5's

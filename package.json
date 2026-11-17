@@ -5,7 +5,8 @@
   "description": "abap2UI5 Launchpad KPI - send KPIs of abap2UI5 apps to the SAP Fiori Launchpad",
   "scripts": {
     "lint": "abaplint ./abaplint.jsonc",
-    "check": "npm run lint",
+    "check:abap2ui5": "abap2ui5lint",
+    "check": "npm run lint && npm run check:abap2ui5",
     "test": "npm run check",
     "syfixes": "find src -type f -name '*.abap' -exec sed -i -e 's/ RAISE EXCEPTION TYPE cx_sy_itab_line_not_found/ ASSERT 1 = 0/g' {} +",
     "strip_trailing_ws": "find src -type f -name '*.abap' -exec sed -i 's/[[:space:]]\\+$//' {} +",
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/abap2UI5-addons/launchpad-kpi#readme",
   "devDependencies": {
+    "@abap2ui5/linter": "^0.11.0",
     "@abaplint/cli": "^2.120.92"
   },
   "engines": {

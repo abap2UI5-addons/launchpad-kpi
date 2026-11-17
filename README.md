@@ -5,7 +5,8 @@
 [![abap2UI5](https://img.shields.io/badge/requires-abap2UI5-blue)](https://github.com/abap2UI5/abap2UI5)
 [![License](https://img.shields.io/github/license/abap2UI5-addons/launchpad-kpi)](LICENSE)
 <br>
-[![ABAP Standard](https://img.shields.io/github/actions/workflow/status/abap2UI5-addons/launchpad-kpi/abap-standard.yaml?branch=standard&label=ABAP%20Standard)](https://github.com/abap2UI5-addons/launchpad-kpi/actions/workflows/abap-standard.yaml)
+[![CI](https://img.shields.io/github/actions/workflow/status/abap2UI5-addons/launchpad-kpi/ci.yaml?branch=standard&label=CI)](https://github.com/abap2UI5-addons/launchpad-kpi/actions/workflows/ci.yaml)
+[![ABAP 7.02](https://img.shields.io/github/actions/workflow/status/abap2UI5-addons/launchpad-kpi/ci-702.yaml?branch=standard&label=ABAP%207.02)](https://github.com/abap2UI5-addons/launchpad-kpi/actions/workflows/ci-702.yaml)
 
 **Send KPIs of your abap2UI5 apps to the SAP Fiori Launchpad.** Implement a
 single interface with a single method that returns the KPI value, and the
@@ -124,7 +125,8 @@ npm ci
 npm run check
 ```
 
-`npm run check` runs abaplint the way CI does (`abap-standard.yaml`).
+`npm run check` runs abaplint and the abap2UI5-linter the way CI does
+(`ci.yaml`, from the shared CI template of abap2UI5-addons).
 
 ## Contributing
 
