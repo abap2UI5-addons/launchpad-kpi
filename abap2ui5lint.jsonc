@@ -1,0 +1,24 @@
+{
+  // abap2UI5-linter (https://github.com/abap2UI5/linter) - CI: the
+  // abap2ui5lint job of ci.yaml. This repository builds no view: the KPI
+  // classes implement z2ui5_if_lp_kpi, not z2ui5_if_app, so the linter reads
+  // every class (allClasses) and runs without the render gate; what it adds
+  // is the released-API check of what is used from abap2UI5.
+  "$schema": "./node_modules/@abap2ui5/linter/data/abap2ui5lint.schema.json",
+
+  "paths": ["src"],
+
+  "allClasses": true,
+
+  "render": false,
+  "ui5": "1.71",
+  "distribution": "openui5",
+
+  // Adoption-time debt: one finding, default-key-table on TT_ENTITY in
+  // z2ui5_cl_lp_kpi_mpc - a SEGW-generated class nobody edits by hand
+  // (AGENTS.md). The baseline counts it without listing it; a NEW finding
+  // fails normally, and the entry fails as stale once the finding is gone.
+  "baseline": "abap2ui5lint-baseline.json",
+
+  "failOn": "warning"
+}
