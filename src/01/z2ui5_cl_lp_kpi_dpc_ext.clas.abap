@@ -9,6 +9,29 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+    "! Up to this count a $count request still gets one row per counted item
+    "! next to the response context's COUNT (see count_to_response)
+    CONSTANTS c_rows_max TYPE i VALUE 1000.
+
+    "! A $count request - the launchpad tile's - is answered with the number
+    "! in the response context's COUNT, which Gateway answers $count with,
+    "! and a large count builds no rows: a KPI of 200,000 would otherwise
+    "! build 200,000 entities on every tile refresh. HAS_COUNT and COUNT are
+    "! both looked up dynamically - a Gateway release without them (or a
+    "! call that fails) gets the rows as before. Up to c_rows_max the rows
+    "! are built anyway, so a small count comes out the same on a Gateway
+    "! that counts the returned rows instead.
+    "!
+    "! @parameter build_rows | abap_false when the count alone answers the request
+    METHODS count_to_response
+      IMPORTING
+        request    TYPE REF TO object
+        count      TYPE i
+      EXPORTING
+        build_rows TYPE abap_bool
+      CHANGING
+        response   TYPE any.
+
     "! An error is answered as an OData error (HTTP 400) and never as an
     "! entity set: a pseudo row would make $count answer 1, and the
     "! launchpad tile would show that 1 as if it were the KPI. Returned and
@@ -94,11 +117,52 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
         RAISE EXCEPTION lx_error.
     ENDTRY.
 
-    DO lv_count TIMES.
-      INSERT VALUE #( id = sy-index ) INTO TABLE lt_result.
-    ENDDO.
+    " one row per counted item - except for a large $count, see
+    " count_to_response( )
+    DATA lv_build_rows TYPE abap_bool.
+    count_to_response( EXPORTING request    = io_tech_request_context
+                                 count      = lv_count
+                       IMPORTING build_rows = lv_build_rows
+                       CHANGING  response   = es_response_context ).
+    IF lv_build_rows = abap_true.
+      DO lv_count TIMES.
+        INSERT VALUE #( id = sy-index ) INTO TABLE lt_result.
+      ENDDO.
+    ENDIF.
 
     copy_data_to_ref( EXPORTING is_data = lt_result CHANGING cr_data = er_entityset ).
+
+  ENDMETHOD.
+
+
+  METHOD count_to_response.
+
+    DATA lv_has_count TYPE abap_bool.
+    FIELD-SYMBOLS <lv_count> TYPE any.
+
+    build_rows = abap_true.
+
+    " by the interface-qualified name: request is typed as object here
+    TRY.
+        CALL METHOD request->('/IWBEP/IF_MGW_REQ_ENTITYSET~HAS_COUNT')
+          RECEIVING
+            rv_has_count = lv_has_count.
+      CATCH cx_sy_dyn_call_error.
+        RETURN.
+    ENDTRY.
+    IF lv_has_count = abap_false.
+      RETURN.
+    ENDIF.
+
+    ASSIGN COMPONENT `COUNT` OF STRUCTURE response TO <lv_count>.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+    <lv_count> = count.
+
+    IF count > c_rows_max.
+      build_rows = abap_false.
+    ENDIF.
 
   ENDMETHOD.
 
