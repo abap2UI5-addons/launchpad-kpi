@@ -116,7 +116,7 @@ The sample `z2ui5_cl_lp_kpi_hello_world` also shows how to pass a second
 ### Preview
 <img width="300" alt="Pasted Graphic 3" src="https://github.com/abap2UI5/abap2UI5-connector_launchpad_kpi/assets/102328295/1b24c31e-5570-4324-92d0-5db915394ceb">
 
-## Limitations & Todo
+## Limitations
 
 * Implement a CDS/SADL based OData Service for `ABAP for Cloud` compatibility
 
