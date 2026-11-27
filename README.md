@@ -37,6 +37,8 @@ count, so every app only has to implement one method.
 
 **Package renamed (2026-11).** The sub-package of the Gateway objects is `<your package>_01` now, not `<your package>_1` - the folder `src/1` is `src/01`, as in the other addons. On a system that has the addon, abapGit creates the new sub-package with the pull; move the Gateway objects into it (or uninstall and install again) and delete the empty `_1` package.
 
+**Filterable in `$metadata` (2026-11).** `CLASS` and `FILTER`, the two properties the tile URL filters on, are marked `sap:filterable="true"` now (`Z2UI5_CL_LP_KPI_MPC_EXT`); SEGW had generated them as not filterable, which a metadata-driven consumer takes at its word. The model reports a newer change time, so Gateway builds the `$metadata` again; should a hub still serve the old one, clear its cache with `/IWFND/CACHE_CLEANUP`.
+
 **Steps** - with [abapGit](https://abapgit.org), in this order:
 
 1. [abap2UI5](https://github.com/abap2UI5/abap2UI5)
