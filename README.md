@@ -101,6 +101,13 @@ ENDCLASS.
 The sample `z2ui5_cl_lp_kpi_hello_world` also shows how to pass a second
 `FILTER` condition (a JSON string) to `count` for different calculations:
 `...$filter=CLASS eq 'z2ui5_cl_lp_kpi_hello_world' and FILTER eq '{ "PROP1" : "B", "PROP2" : "VAL2" }'`
+The `FILTER` value reaches `count` exactly as it was sent - its case is kept,
+so a JSON value `"b"` is not `"B"`. Only the class name is case-insensitive.
+
+A call the service cannot answer - no `CLASS` condition, a class that does not
+exist or does not implement `Z2UI5_IF_LP_KPI`, or an exception raised in
+`count` - is answered with an OData error (HTTP 400) that names the reason,
+never with a number, so a broken tile shows an error instead of a wrong KPI.
 
 ## Features
 
