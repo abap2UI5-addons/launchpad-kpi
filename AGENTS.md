@@ -12,7 +12,7 @@ and this file in step.
 | --- | --- |
 | `src/z2ui5_if_lp_kpi.intf.abap` | The one interface an app implements - its contract, never change the signature of `count( )` |
 | `src/z2ui5_cl_lp_kpi_hello_world.clas.abap` | The sample app with a KPI |
-| `src/1/` | The Gateway project `Z2UI5_PROXY_KPI` (IWPR), its model and service (IWMO, IWOM, IWSV, IWSG) and the generated classes `Z2UI5_CL_LP_KPI_MPC(_EXT)` / `_DPC(_EXT)` |
+| `src/01/` | The Gateway project `Z2UI5_PROXY_KPI` (IWPR), its model and service (IWMO, IWOM, IWSV, IWSG) and the generated classes `Z2UI5_CL_LP_KPI_MPC(_EXT)` / `_DPC(_EXT)` |
 | `site/` | The documentation site (VitePress) - https://abap2ui5-addons.github.io/launchpad-kpi/ |
 
 The default branch is **`standard`**, not `main`; `702` is downported from it

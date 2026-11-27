@@ -35,6 +35,8 @@ count, so every app only has to implement one method.
 
 **Renamed (2026-11).** The generated OData classes follow the abap2UI5 naming now: `ZCL_Z2UI5_PROXY_KPI_MPC(_EXT)` and `_DPC(_EXT)` are `Z2UI5_CL_LP_KPI_MPC(_EXT)` and `Z2UI5_CL_LP_KPI_DPC(_EXT)`; the model and the service point to the new classes. After the pull abapGit lists the old classes as deleted in the repository - delete them.
 
+**Package renamed (2026-11).** The sub-package of the Gateway objects is `<your package>_01` now, not `<your package>_1` - the folder `src/1` is `src/01`, as in the other addons. On a system that has the addon, abapGit creates the new sub-package with the pull; move the Gateway objects into it (or uninstall and install again) and delete the empty `_1` package.
+
 **Steps** - with [abapGit](https://abapgit.org), in this order:
 
 1. [abap2UI5](https://github.com/abap2UI5/abap2UI5)
@@ -114,7 +116,7 @@ The sample `z2ui5_cl_lp_kpi_hello_world` also shows how to pass a second
 ### Preview
 <img width="300" alt="Pasted Graphic 3" src="https://github.com/abap2UI5/abap2UI5-connector_launchpad_kpi/assets/102328295/1b24c31e-5570-4324-92d0-5db915394ceb">
 
-## Limitations & Todo
+## Limitations
 
 * Implement a CDS/SADL based OData Service for `ABAP for Cloud` compatibility
 
