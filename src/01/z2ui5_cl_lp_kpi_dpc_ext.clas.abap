@@ -62,9 +62,23 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
     " FILTER is handed to count( ) as it was sent - free text (the sample
     " reads it as JSON) whose case is the app's business; only the class
     " name is upper-cased.
-    DATA(lt_filter_cond) = io_tech_request_context->get_filter( )->get_filter_select_options( ).
-    LOOP AT lt_filter_cond REFERENCE INTO DATA(lr_cond).
-      READ TABLE lr_cond->select_options REFERENCE INTO DATA(lr_option) INDEX 1.
+    DATA lt_filter_cond TYPE /iwbep/if_mgw_req_filter=>ty_t_mgw_select_option.
+    DATA temp1 LIKE LINE OF lt_filter_cond.
+    DATA lr_cond LIKE REF TO temp1.
+      DATA lr_option TYPE REF TO /iwbep/if_mgw_req_filter=>ty_s_cod_select_option.
+    DATA temp2 TYPE REF TO cl_abap_intfdescr.
+    DATA lo_kpi_intf LIKE temp2.
+    DATA lo_type TYPE REF TO cl_abap_typedescr.
+    DATA li_proxy_kpi TYPE REF TO z2ui5_if_lp_kpi.
+        DATA lv_count TYPE i.
+    DATA lv_build_rows TYPE abap_bool.
+        DATA temp3 TYPE z2ui5_cl_lp_kpi_mpc=>ts_entity.
+    lt_filter_cond = io_tech_request_context->get_filter( )->get_filter_select_options( ).
+
+
+    LOOP AT lt_filter_cond REFERENCE INTO lr_cond.
+
+      READ TABLE lr_cond->select_options REFERENCE INTO lr_option INDEX 1.
       IF sy-subrc <> 0.
         CONTINUE.
       ENDIF.
@@ -87,8 +101,11 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
     " only once the runtime got that far - this way no other class is ever
     " instantiated. A class that does not exist or does not implement the
     " interface is answered with an error, not with a dump.
-    DATA(lo_kpi_intf) = CAST cl_abap_intfdescr( cl_abap_typedescr=>describe_by_name( `Z2UI5_IF_LP_KPI` ) ).
-    DATA lo_type TYPE REF TO cl_abap_typedescr.
+
+    temp2 ?= cl_abap_typedescr=>describe_by_name( `Z2UI5_IF_LP_KPI` ).
+
+    lo_kpi_intf = temp2.
+
     cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_classname
                                          RECEIVING  p_descr_ref    = lo_type
                                          EXCEPTIONS type_not_found = 1
@@ -100,7 +117,7 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
       RAISE EXCEPTION lx_error.
     ENDIF.
 
-    DATA li_proxy_kpi TYPE REF TO z2ui5_if_lp_kpi.
+
     TRY.
         CREATE OBJECT li_proxy_kpi TYPE (lv_classname).
       CATCH cx_sy_create_object_error cx_sy_move_cast_error INTO lx_root.
@@ -110,7 +127,8 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
     ENDTRY.
 
     TRY.
-        DATA(lv_count) = li_proxy_kpi->count( lv_filter ).
+
+        lv_count = li_proxy_kpi->count( lv_filter ).
       CATCH cx_root INTO lx_root.
         lx_error = bad_request( message  = |{ lv_classname }->count( ) failed: { lx_root->get_text( ) }|
                                 previous = lx_root ).
@@ -119,14 +137,17 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
 
     " one row per counted item - except for a large $count, see
     " count_to_response( )
-    DATA lv_build_rows TYPE abap_bool.
+
     count_to_response( EXPORTING request    = io_tech_request_context
                                  count      = lv_count
                        IMPORTING build_rows = lv_build_rows
                        CHANGING  response   = es_response_context ).
     IF lv_build_rows = abap_true.
       DO lv_count TIMES.
-        INSERT VALUE #( id = sy-index ) INTO TABLE lt_result.
+
+        CLEAR temp3.
+        temp3-id = sy-index.
+        INSERT temp3 INTO TABLE lt_result.
       ENDDO.
     ENDIF.
 
@@ -169,9 +190,9 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
 
   METHOD bad_request.
 
-    result = NEW #( textid   = /iwbep/cx_mgw_busi_exception=>business_error
-                    message  = CONV bapi_msg( message )
-                    previous = previous ).
+    DATA temp4 TYPE bapi_msg.
+    temp4 = message.
+    CREATE OBJECT result EXPORTING textid = /iwbep/cx_mgw_busi_exception=>business_error message = temp4 previous = previous.
 
   ENDMETHOD.
 
