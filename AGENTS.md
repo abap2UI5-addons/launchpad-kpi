@@ -22,7 +22,10 @@ on every push (`ci-702.yaml`).
 
 - **The SEGW objects are generated.** Change the model in SEGW on a system
   and pull it back with abapGit; never edit the IWPR/IWMO XML or the
-  `_MPC` / `_DPC` classes by hand. Code of our own goes into `_DPC_EXT`.
+  `_MPC` / `_DPC` classes by hand. Code of our own goes into `_DPC_EXT`,
+  model changes into `_MPC_EXT` (`define( )` marks `CLASS` and `FILTER`
+  filterable; raise its `c_changed_at` with every model change there, so a
+  cached `$metadata` is built again).
 - **No ICF node in the repository.** The service name has 19 characters and
   an ICF node at most 15 - the system creates the node under
   `/sap/opu/odata/sap/` with a name of its own when the service is activated
