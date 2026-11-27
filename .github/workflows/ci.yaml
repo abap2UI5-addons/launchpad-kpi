@@ -4,6 +4,9 @@ name: ci
 # abap2UI5-addons (rap-ext, .github/ci/README.md):
 #
 #   abaplint      Standard ABAP (abaplint.jsonc)
+#   npm-scripts   check:702 (a scratch copy of src/ downported and linted
+#                 with .github/abaplint/abap_702.jsonc - the 7.02 gate of a
+#                 pull request; ci-702 publishes the branch 702)
 #   abap2ui5lint  the released-API check of the abap2UI5-linter
 #                 (abap2ui5lint.jsonc, allClasses) - without the render gate,
 #                 this repository builds no view
@@ -39,8 +42,9 @@ jobs:
       contents: write
     uses: abap2UI5-addons/rap-ext/.github/workflows/addon-check.yaml@d599eb227a476d120b473ae3b707fe983ab3e441 # ci-v1.1.0
     with:
-      abaplint: '["./abaplint.jsonc"]'
-      abap2ui5lint-render: false
-      canary: ${{ github.event_name == 'schedule' }}
       # the default branch here - where the badges would be published from
       branch: standard
+      abaplint: '["./abaplint.jsonc"]'
+      npm-scripts: '["check:702"]'
+      abap2ui5lint-render: false
+      canary: ${{ github.event_name == 'schedule' }}

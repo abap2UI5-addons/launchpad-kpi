@@ -19,6 +19,7 @@ green run locally is a green run there.
 | Gate | What it proves |
 | --- | --- |
 | `npm run lint` | abaplint over `src/`, resolved against the abap2UI5 core |
+| `npm run check:702` | the 7.02 downport: a scratch copy of `src/` in `build/702`, downported and linted with `.github/abaplint/abap_702.jsonc` (`.github/scripts/check-702.sh`) - `src/` is never rewritten |
 
 The OData service and its generated classes cannot be checked without a system. Say in the pull request whether the change was tried on a launchpad tile.
 

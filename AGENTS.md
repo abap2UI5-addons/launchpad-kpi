@@ -40,7 +40,7 @@ on every push (`ci-702.yaml`).
 
 ```sh
 npm ci
-npm run check   # abaplint and the abap2UI5-linter, what CI runs
+npm run check   # abaplint, the 7.02 downport and the abap2UI5-linter, what CI runs
 npm run site    # the documentation site into build/site
 ```
 
@@ -55,7 +55,10 @@ from `standard`:
   hand: `check / abaplint (./abaplint.jsonc)` and `check / abap2ui5lint`
   (`abap2ui5lint.jsonc`: every class, no render gate - there is no view; it
   checks what is used from abap2UI5). These are the required status checks
-  of the branch protection. The call passes `branch: standard`, the branch
+  of the branch protection. Also `check / npm run check:702`, the 7.02 gate
+  of a pull request (`.github/scripts/check-702.sh` downports a scratch copy
+  of `src/` in `build/702` and lints it with `.github/abaplint/abap_702.jsonc`;
+  `src/` is never rewritten). The call passes `branch: standard`, the branch
   the template publishes badges from. The linter's baseline holds one finding in the
   generated `z2ui5_cl_lp_kpi_mpc` (`default-key-table`), which is never
   edited by hand.
