@@ -9,6 +9,17 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+    "! An error is answered as an OData error (HTTP 400) and never as an
+    "! entity set: a pseudo row would make $count answer 1, and the
+    "! launchpad tile would show that 1 as if it were the KPI. Returned and
+    "! not raised here, so every exit of get_entityset stays visible where
+    "! it happens.
+    METHODS bad_request
+      IMPORTING
+        message       TYPE string
+        previous      TYPE REF TO cx_root OPTIONAL
+      RETURNING
+        VALUE(result) TYPE REF TO /iwbep/cx_mgw_busi_exception.
 ENDCLASS.
 
 
@@ -18,27 +29,41 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
   METHOD /iwbep/if_mgw_appl_srv_runtime~get_entityset.
 
     DATA lt_result TYPE z2ui5_cl_lp_kpi_mpc=>tt_entity.
+    DATA lx_error TYPE REF TO /iwbep/cx_mgw_busi_exception.
+    DATA lx_root TYPE REF TO cx_root.
+    DATA lv_classname TYPE string.
+    DATA lv_filter TYPE string.
+
+    " Read without table expressions: the 702 downport turns a failed one
+    " into an ASSERT, so the optional FILTER would dump there when missing.
+    " FILTER is handed to count( ) as it was sent - free text (the sample
+    " reads it as JSON) whose case is the app's business; only the class
+    " name is upper-cased.
     DATA(lt_filter_cond) = io_tech_request_context->get_filter( )->get_filter_select_options( ).
+    LOOP AT lt_filter_cond REFERENCE INTO DATA(lr_cond).
+      READ TABLE lr_cond->select_options REFERENCE INTO DATA(lr_option) INDEX 1.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+      CASE lr_cond->property.
+        WHEN `CLASS`.
+          lv_classname = to_upper( lr_option->low ).
+        WHEN `FILTER`.
+          lv_filter = lr_option->low.
+      ENDCASE.
+    ENDLOOP.
 
-    TRY.
-        DATA(lv_classname)   = to_upper( lt_filter_cond[ property = `CLASS` ]-select_options[ 1 ]-low ).
-      CATCH cx_root.
-        INSERT VALUE #( id = `ERROR_NO_PARAMETER_FOUND_WITH_NAME_CLASS` ) INTO TABLE lt_result.
-        copy_data_to_ref( EXPORTING is_data = lt_result CHANGING cr_data = er_entityset ).
-        RETURN.
-    ENDTRY.
-
-    TRY.
-        DATA(lv_filter) = to_upper( lt_filter_cond[ property = `FILTER` ]-select_options[ 1 ]-low ).
-      CATCH cx_root ##NO_HANDLER.
-    ENDTRY.
+    IF lv_classname IS INITIAL.
+      lx_error = bad_request( `The $filter needs a condition CLASS eq '<class name>'.` ).
+      RAISE EXCEPTION lx_error.
+    ENDIF.
 
     " The class name comes from the request, so only a class that implements
     " z2ui5_if_lp_kpi is ever created. That is checked here, before CREATE
     " OBJECT: the typed reference below would refuse any other class too, but
     " only once the runtime got that far - this way no other class is ever
     " instantiated. A class that does not exist or does not implement the
-    " interface is answered like a missing CLASS condition, not with a dump.
+    " interface is answered with an error, not with a dump.
     DATA(lo_kpi_intf) = CAST cl_abap_intfdescr( cl_abap_typedescr=>describe_by_name( `Z2UI5_IF_LP_KPI` ) ).
     DATA lo_type TYPE REF TO cl_abap_typedescr.
     cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_classname
@@ -48,26 +73,41 @@ CLASS z2ui5_cl_lp_kpi_dpc_ext IMPLEMENTATION.
     IF    sy-subrc <> 0
        OR lo_type->kind <> cl_abap_typedescr=>kind_class
        OR lo_kpi_intf->applies_to_class( lv_classname ) = abap_false.
-      INSERT VALUE #( id = `ERROR_NO_KPI_CLASS_FOUND_WITH_THIS_NAME` ) INTO TABLE lt_result.
-      copy_data_to_ref( EXPORTING is_data = lt_result CHANGING cr_data = er_entityset ).
-      RETURN.
+      lx_error = bad_request( |No class { lv_classname } that implements Z2UI5_IF_LP_KPI.| ).
+      RAISE EXCEPTION lx_error.
     ENDIF.
 
     DATA li_proxy_kpi TYPE REF TO z2ui5_if_lp_kpi.
     TRY.
         CREATE OBJECT li_proxy_kpi TYPE (lv_classname).
-      CATCH cx_sy_create_object_error cx_sy_move_cast_error.
-        INSERT VALUE #( id = `ERROR_NO_KPI_CLASS_FOUND_WITH_THIS_NAME` ) INTO TABLE lt_result.
-        copy_data_to_ref( EXPORTING is_data = lt_result CHANGING cr_data = er_entityset ).
-        RETURN.
+      CATCH cx_sy_create_object_error cx_sy_move_cast_error INTO lx_root.
+        lx_error = bad_request( message  = |Class { lv_classname } cannot be instantiated.|
+                                previous = lx_root ).
+        RAISE EXCEPTION lx_error.
     ENDTRY.
-    DATA(lv_count) = li_proxy_kpi->count( lv_filter ).
+
+    TRY.
+        DATA(lv_count) = li_proxy_kpi->count( lv_filter ).
+      CATCH cx_root INTO lx_root.
+        lx_error = bad_request( message  = |{ lv_classname }->count( ) failed: { lx_root->get_text( ) }|
+                                previous = lx_root ).
+        RAISE EXCEPTION lx_error.
+    ENDTRY.
 
     DO lv_count TIMES.
       INSERT VALUE #( id = sy-index ) INTO TABLE lt_result.
     ENDDO.
 
     copy_data_to_ref( EXPORTING is_data = lt_result CHANGING cr_data = er_entityset ).
+
+  ENDMETHOD.
+
+
+  METHOD bad_request.
+
+    result = NEW #( textid   = /iwbep/cx_mgw_busi_exception=>business_error
+                    message  = CONV bapi_msg( message )
+                    previous = previous ).
 
   ENDMETHOD.
 
