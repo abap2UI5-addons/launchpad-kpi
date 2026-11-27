@@ -40,7 +40,7 @@ on every push (`ci-702.yaml`).
 
 ```sh
 npm ci
-npm run check   # abaplint and the abap2UI5-linter, what CI runs
+npm run check   # abaplint, the 7.02 downport and the abap2UI5-linter, what CI runs
 npm run site    # the documentation site into build/site
 ```
 
@@ -55,7 +55,11 @@ from `standard`:
   hand: `check / abaplint (./abaplint.jsonc)` and `check / abap2ui5lint`
   (`abap2ui5lint.jsonc`: every class, no render gate - there is no view; it
   checks what is used from abap2UI5). These are the required status checks
-  of the branch protection. The linter's baseline holds one finding in the
+  of the branch protection. Also `check / npm run check:702`, the 7.02 gate
+  of a pull request (`.github/scripts/check-702.sh` downports a scratch copy
+  of `src/` in `build/702` and lints it with `.github/abaplint/abap_702.jsonc`;
+  `src/` is never rewritten). The call passes `branch: standard`, the branch
+  the template publishes badges from. The linter's baseline holds one finding in the
   generated `z2ui5_cl_lp_kpi_mpc` (`default-key-table`), which is never
   edited by hand.
 * `ci-702` - on every push to `standard` `npm run auto_downport`, a
@@ -63,9 +67,9 @@ from `standard`:
   (`.github/abaplint/abap_702.jsonc`). Never commit to `702` by hand.
 * `bump-deps` (monthly; the template pin moves only with the `DEPS_TOKEN`
   secret).
-* `deploy-pages` - **not** from the template: `addon-pages.yaml` of
-  ci-v1.0.0 deploys only from `refs/heads/main`, and the default branch here
-  is `standard`.
+* `deploy-pages` - the template's `addon-pages.yaml` (since ci-v1.1.0) with
+  `branch: standard`: a pull request builds the site, a push to `standard`
+  deploys it.
 
 No ABAP Cloud lint (Gateway, above), no unit tests, no rename, no
 `.github/deps.json`.

@@ -134,7 +134,7 @@ npm ci
 npm run check
 ```
 
-`npm run check` runs abaplint and the abap2UI5-linter the way CI does
+`npm run check` runs abaplint, the 7.02 downport and the abap2UI5-linter the way CI does
 (`ci.yaml`, from the shared CI template of abap2UI5-addons).
 
 ## Contributing
